@@ -1,4 +1,4 @@
-/* 
+/*
    Copyright (c) 2016, 2018 Andreas F. Borchert
    All rights reserved.
 
@@ -81,14 +81,19 @@ unsigned int log2(std::size_t val) {
 
 int main() {
    fmt::printf("   memsize  time in ns\n");
-   for (std::size_t memsize = MIN_SIZE; memsize <= MAX_SIZE;
-	 memsize += (std::size_t{1} <<
-	    (std::max(GRANULARITY, log2(memsize))-GRANULARITY))) {
+//   for (std::size_t memsize = MIN_SIZE; memsize <= MAX_SIZE;
+//	 memsize += (std::size_t{1} <<
+//	    (std::max(GRANULARITY, log2(memsize))-GRANULARITY))) {
+      std::size_t memsize = 1024 * 1024 * 128;
       void** memory = create_random_chain(memsize);
+      std::cout << "Created random chain" << std::endl;
       std::size_t count = std::max(memsize * 16, std::size_t{1}<<30);
+      count = 2000000;
+      std::cout << "Start chase chain" << std::endl;
       double t = chase_pointers(memory, count);
+      std::cout << "Done chase chain" << std::endl;
       delete[] memory;
       double ns = t * 1000000000 / count;
       fmt::printf(" %9u  %10.5lf\n", memsize, ns); std::cout.flush();
-   }
+//   }
 }
